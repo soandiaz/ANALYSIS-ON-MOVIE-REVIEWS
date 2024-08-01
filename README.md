@@ -9,6 +9,7 @@ MENTOR: NEELA SANTHOSH KUMAR <br>
 
 ## Overview of project <br>
 Analysis on  Movie Review <br>
+<img src="ouput.png">
 ### Objective <br>
 Developed a sentiment analysis model to classify movie reviews as positive or
 negative. Used a dataset IMDb Movie Reviews dataset for training and
