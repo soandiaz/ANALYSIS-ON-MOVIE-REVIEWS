@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+import nltk
+from nltk.tokenize import word_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+
+# Load dataset
+df = pd.read_csv('IMDB Dataset.csv')
+
+# Preprocess text data
+nltk.download('punkt')
+nltk.download('stopwords') 
+stop_words = set(nltk.corpus.stopwords.words('english'))
+def preprocess_text(text):
+    tokens = word_tokenize(text.lower())
+    tokens = [t for t in tokens if t not in stop_words]
+    return ' '.join(tokens)
+df['review'] = df['review'].apply(preprocess_text)
+
+# Split dataset into training and testing sets
+train_text, test_text, train_labels, test_labels = train_test_split(df['review'], df['sentiment'], test_size=0.2, random_state=42)
+
+# Create TF-IDF vectorizer
+vectorizer = TfidfVectorizer(stop_words='english')
+
+# Fit and transform training data
+X_train = vectorizer.fit_transform(train_text)
+y_train = train_labels
+
+# Train Naive Bayes model
+nb_model = MultinomialNB()
+nb_model.fit(X_train, y_train)
+
+
+
+X_test = vectorizer.transform(test_text)
+y_pred = nb_model.predict(X_test)
+
+y_test = test_labels 
+
+
+from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, y_pred)
+print('Accuracy:', accuracy)
+
+#test
+new_review = input('Enter a new review: ')
+new_review_vector = vectorizer.transform([new_review])
+prediction = nb_model.predict(new_review_vector)
+print('Prediction:', prediction)
